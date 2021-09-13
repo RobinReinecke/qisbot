@@ -1,0 +1,12 @@
+version: "3.7"
+
+services:
+  qisbot:
+    container_name: qisbot
+    image: robinatus/qisbot
+    restart: unless-stopped
+    environment:
+      - USER=yXXXXXXX
+      - PASSWORD=password
+      - BOT_TOKEN=bot_token
+      - CHAT_TOKEN=chat_token
