@@ -6,6 +6,7 @@ import os
 
 user = os.environ['USER']
 password = os.environ['PASSWORD']
+degree = os.environ['DEGREE']
 botToken = os.environ['BOT_TOKEN']
 chatToken = os.environ['CHAT_TOKEN']
 
@@ -19,7 +20,7 @@ def telegram_bot_sendtext(bot_message):
 
 def load_exams():
     url = "https://vorlesungen.tu-braunschweig.de/qisserver/rds?state=user&type=1&category=auth.login&startpage=portal.vm&breadCrumbSource=portal"
-    
+
     data = {'asdf': user, 'fdsa': password, 'submit': 'Anmelden'}
     s = requests.Session() # save cookies
     print('Logging in to QIS...')
@@ -40,9 +41,10 @@ def load_exams():
 
     # Select degree
     pq = PyQuery(x.text)
-    tag = pq('a[title*="angemeldete Prüfungen anzeigen"]')
+    # this is needed if the user has multiple degrees
+    tag = pq('a[title*="angemeldete Prüfungen anzeigen für ' + degree + '"]')
     link = tag.attr('href')
-    print('Selecting the degree')
+    print('Selecting the degree "' + degree + "'")
     x = s.get(link)
 
     # Print result
@@ -69,4 +71,3 @@ for i in ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00"
 while True:
     schedule.run_pending()
     time.sleep(60)
-    

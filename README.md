@@ -11,7 +11,7 @@ It will check your registered exams every hour between 9:00 AM and 5:00 PM and m
 2. Send your bot a sample message
 3. Visit *https://api.telegram.org/bot**YourBOTToken**/getUpdates* and insert your **bot_token**
 4. Copy the **chat_token** (alias *chat id*)
-5. Insert your **bot_token**, **chat_token**, **y-number**, and **TUBS-password** into the following docker-compose file
+5. Insert your **bot_token**, **chat_token**, **y-number**, **TUBS-password**, and **degree** into the following docker-compose file
 
 ```
 services:
@@ -24,5 +24,6 @@ services:
       - PASSWORD=password
       - BOT_TOKEN=bot_token
       - CHAT_TOKEN=chat_token
+      - DEGREE="Abschluss 88 Master"
 
 ```
