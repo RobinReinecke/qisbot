@@ -7,7 +7,7 @@ on:
     branches: [ main ]
     
 jobs:
-  build:
+  build-image:
     runs-on: ubuntu-latest
     steps:
       - name: Check Out Repo 
@@ -34,11 +34,14 @@ jobs:
           
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
-        
+
+  sync-readme:
+    runs-on: ubuntu-latest
+    steps:
       - name: Sync
         uses: ms-jpq/sync-dockerhub-readme@v1
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-          repository: Robinatus/qisbot
+          repository: robinatus/qisbot
           readme: "./README.md"
