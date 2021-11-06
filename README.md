@@ -4,7 +4,8 @@
 
 Tired of manually checking for exam results?
 Then QISBot will help you!
-It will check your registered exams every hour between 9:00 AM and 5:00 PM and message you via Telegram.
+It will check every hour between 9:00 AM and 5:00 PM if your registered exams have changed.
+If so, it will download your grades and message them to you via Telegram.
 
 ## Setup
 1. Create a Telegram Bot and obtain the **bot_token** (described [here](https://core.telegram.org/bots#6-botfather))
@@ -24,6 +25,6 @@ services:
       - PASSWORD=password
       - BOT_TOKEN=bot_token
       - CHAT_TOKEN=chat_token
-      - DEGREE="Abschluss 88 Master"
+      - DEGREE=Bachelor/Master
 
 ```

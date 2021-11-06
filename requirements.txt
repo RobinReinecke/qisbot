@@ -1,3 +1,4 @@
 pyquery
 requests
 schedule
+py-pdf-parser

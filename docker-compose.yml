@@ -10,4 +10,4 @@ services:
       - PASSWORD=password
       - BOT_TOKEN=bot_token
       - CHAT_TOKEN=chat_token
-      - DEGREE="Abschluss ..."
+      - DEGREE=Master
