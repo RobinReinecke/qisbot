@@ -14,19 +14,23 @@ chatToken = os.environ['CHAT_TOKEN']
 url = "https://vorlesungen.tu-braunschweig.de/qisserver/rds?state=user&type=1&category=auth.login&startpage=portal.vm&breadCrumbSource=portal"
 old_exams = []
 
+
 def telegram_bot_sendtext(bot_message):
-    send_text = 'https://api.telegram.org/bot' + botToken + '/sendMessage?chat_id=' + chatToken + '&parse_mode=Markdown&text=' + bot_message
+    send_text = 'https://api.telegram.org/bot' + botToken + \
+        '/sendMessage?chat_id=' + chatToken + '&parse_mode=Markdown&text=' + bot_message
 
     response = requests.get(send_text)
 
     return response.json()
 
+
 def login_to_qis():
     data = {'asdf': user, 'fdsa': password, 'submit': 'Anmelden'}
-    session = requests.Session() # save cookies
+    session = requests.Session()  # save cookies
     print('Logging in to QIS...')
     response = session.post(url, data)
     return session, response
+
 
 def load_registered_exams():
     session, response = login_to_qis()
@@ -58,9 +62,11 @@ def load_registered_exams():
     rows = table.children('tr')
     registered_exams = []
     for index, row in enumerate(rows):
-        if (index < 2): continue
+        if (index < 2):
+            continue
         registered_exams.append(PyQuery(row).children("td.mod_n").eq(1).text())
     return registered_exams
+
 
 def load_grades():
     session, response = login_to_qis()
@@ -110,15 +116,21 @@ def load_grades():
     pdf.write(response.content)
     pdf.close()
 
+
 def process_pdf(exams):
     document = load_file("notenspiegel.pdf")
     message = 'New grades found for following exams:\n'
-    for exam in exams:
-        exam_element = document.elements.filter_by_text_contains(exam).filter_by_font('Helvetica-Oblique,8.0').extract_single_element()
-        line = document.elements.to_the_right_of(exam_element)
-        message += '\n' + exam + ': ' + line[len(line) - 1].text()
+    try:
+        for exam in exams:
+            exam_element = document.elements.filter_by_text_contains(
+                exam).filter_by_font('Helvetica-Oblique,8.0').extract_single_element()
+            line = document.elements.to_the_right_of(exam_element)
+            message += '\n' + exam + ': ' + line[len(line) - 1].text()
+    except:
+        message += "Exception during loading of grades."
     print(message)
     return message
+
 
 def bot_run():
     global old_exams
@@ -132,6 +144,7 @@ def bot_run():
         old_exams = exams
     else:
         print("No new grades found")
+
 
 for i in ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"]:
     schedule.every().monday.at(i).do(bot_run)
