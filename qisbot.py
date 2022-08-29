@@ -27,8 +27,9 @@ def telegram_bot_sendtext(bot_message):
 def login_to_qis():
     data = {'asdf': user, 'fdsa': password, 'submit': 'Anmelden'}
     session = requests.Session()  # save cookies
-    print('Logging in to QIS...')
+    print('Logging into QIS.')
     response = session.post(url, data)
+    print('QIS Login successful.')
     return session, response
 
 
@@ -53,7 +54,7 @@ def load_registered_exams():
     # this is needed if the user has multiple degrees
     tag = pq('a[title*="' + degree + '"]')
     link = tag.attr('href')
-    print('Selecting the degree "' + degree + "'")
+    print('Selecting the degree "' + degree + '"')
     response = session.get(link)
 
     # return results
@@ -61,6 +62,9 @@ def load_registered_exams():
     table = pq('table:contains("Prüfungsnr.")')
     rows = table.children('tr')
     registered_exams = []
+
+    print('Extracting exams')
+
     for index, row in enumerate(rows):
         if (index < 2):
             continue
@@ -96,6 +100,7 @@ def load_grades():
     pq = PyQuery(response.text)
     tag = pq('a[title*="Leistungen anzeigen"]')
     link = tag.attr('href')
+    print('Selecting "Leistungen anzeigen"')
     # This call generates the pdf files
     response = session.get(link)
 
@@ -103,9 +108,10 @@ def load_grades():
     pq = PyQuery(response.text)
     tag = pq('a[href*="hisreports"]')
     link = tag.attr('href')
+    print('Start generating the PDF')
     response = session.get(link)
 
-    print('Storing the PDF.')
+    print('Storing the PDF')
 
     try:
         os.remove("notenspiegel.pdf")
@@ -115,6 +121,8 @@ def load_grades():
     pdf = open("notenspiegel.pdf", 'wb')
     pdf.write(response.content)
     pdf.close()
+
+    print('PDF stored')
 
 
 def process_pdf(exams):
