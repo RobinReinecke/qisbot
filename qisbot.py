@@ -122,12 +122,15 @@ def process_pdf(exams):
     message = 'New grades found for following exams:\n'
     try:
         for exam in exams:
-            exam_element = document.elements.filter_by_text_contains(
-                exam).filter_by_font('Helvetica-Oblique,8.0').extract_single_element()
+            # Disclaimer: We expect here that the graded element is the first one
+            # with this specific name.
+            # Sometimes it happens that a exam has two (or more) entries due to
+            # stuff like passed homework or seminar or stuff.
+            exam_element = document.elements.filter_by_text_contains(exam)[0]
             line = document.elements.to_the_right_of(exam_element)
             message += '\n' + exam + ': ' + line[len(line) - 1].text()
     except:
-        message += "Exception during loading of grades."
+        message += "Can not extract the grade from the PDF."
     print(message)
     return message
 
